@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🏀 Courtside Basketball Tournament Statistics System
 
-## Getting Started
+A complete, production-ready, high-speed basketball tournament stat-tracking application designed for **live single-operator courtside use** on desktop, tablet, or laptop.
 
-First, run the development server:
+Built with **Next.js 16 (App Router)**, **TypeScript**, **Tailwind CSS v4**, and **Supabase PostgreSQL + RLS + Realtime**. Fully Vercel compatible.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## ⚡ Features & Courtside Design
+
+* **Courtside Operator Mode**: One-tap score & stat recording (PTS, 3PM, FGM, FTM, O-REB, D-REB, AST, STL, BLK, TO, FOUL).
+* **Keyboard Shortcut Support**: Full `Ctrl+Z` / `Cmd+Z` keybinding for instant undo.
+* **Instant Undo Button**: One-tap undo for accidental button presses during high-speed game play.
+* **Side-by-Side Dual Team Interface**: View both Team A & Team B active rosters on one screen without switching tabs on desktop/tablet.
+* **Live Game Clock**: Integrated quarter timer with start/pause and period selector.
+* **Database Persistence & Realtime**: State automatically syncs with Supabase.
+* **Automated Advanced Metrics**:
+  * **Game & Tournament MVP Formula**: `(PTS * 1.5) + (REB * 1.2) + (AST * 1.5) + (STL * 2) + (BLK * 2) - (TO * 1.5) - (FOUL * 0.5)`
+  * **Best Defender Formula**: `(STL * 3) + (BLK * 3) + (D-REB * 1.5) - (FOUL * 1.0)`
+* **Printable Game Reports**: Clean print stylesheet formatted for PDF generation or physical printing.
+* **Completed Game Locking & Reopen**: Protect completed match stats with atomic locked status; administrator can reopen if revisions are needed.
+* **Search & Filter History**: Filter game history by team name, game number, date, or player name.
+
+---
+
+## 🛠️ Getting Started
+
+### 1. Prerequisites
+- Node.js 18+ installed
+- A free [Supabase](https://supabase.com) project
+
+### 2. Database Setup (Supabase)
+1. Open your Supabase project dashboard -> **SQL Editor**.
+2. Copy the contents of [`supabase/schema.sql`](file:///C:/Users/JOSHUA%20PINTO/.gemini/antigravity-ide/scratch/basketball-stats/supabase/schema.sql) into the query editor and run it.
+3. This sets up tables (`tournaments`, `games`, `players`, `player_game_stats`), atomic Postgres RPC functions (`increment_player_stat`, `undo_player_stat`, `finalize_game`), Row Level Security (RLS) policies, and performance indexes.
+
+### 3. Environment Configuration
+Create a `.env.local` file in the root directory:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your-anon-key
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 4. Running Locally
+```bash
+npm install
+npm run dev
+```
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🚀 Deployment to Vercel
 
-## Learn More
+1. Push this repository to GitHub or import directly into Vercel.
+2. Set Environment Variables in Vercel project settings:
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
+3. Click **Deploy**.
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📄 License
+MIT

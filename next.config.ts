@@ -1,7 +1,8 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // Vercel compatible — no filesystem, no local SQLite
+  // All data persists in Supabase
 };
 
 export default nextConfig;
