@@ -30,6 +30,8 @@ export async function POST(request: Request) {
       tournament = newT;
     }
 
+    if (!tournament) throw new Error('Failed to get or create tournament');
+
     // 2. Create game
     const { data: game, error: gameErr } = await supabase
       .from('games')
