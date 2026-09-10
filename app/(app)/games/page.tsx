@@ -29,29 +29,21 @@ export default async function GamesPage() {
     games = (data as Game[]) ?? [];
   }
 
-  const canAddGame = games.length < 20;
-
   return (
     <div className="p-6 max-w-4xl mx-auto pb-24 md:pb-6">
       <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
         <div>
           <h1 className="text-3xl font-black text-white">Games</h1>
           <p className="text-gray-400 mt-1">
-            {games.length} / 20 games
+            {games.length} game{games.length !== 1 ? 's' : ''}
           </p>
         </div>
-        {canAddGame ? (
-          <Link
-            href="/games/new"
-            className="bg-orange-500 hover:bg-orange-400 text-white font-bold px-5 py-2.5 rounded-xl transition-colors text-sm"
-          >
-            + Add Game
-          </Link>
-        ) : (
-          <span className="bg-gray-800 text-gray-400 font-semibold px-5 py-2.5 rounded-xl text-sm">
-            Maximum 20 games reached
-          </span>
-        )}
+        <Link
+          href="/games/new"
+          className="bg-orange-500 hover:bg-orange-400 text-white font-bold px-5 py-2.5 rounded-xl transition-colors text-sm"
+        >
+          + Add Game
+        </Link>
       </div>
 
       {!tournament && (
@@ -73,6 +65,16 @@ export default async function GamesPage() {
       <div className="space-y-3">
         {games.map((game) => {
           const statusCfg = STATUS_CONFIG[game.status];
+
+          async function deleteGame() {
+            'use server';
+            const supabase = await createClient();
+            await supabase.from('games').delete().eq('id', game.id);
+            // Revalidate happens on page load or via router refresh, but in server action we should revalidate path
+            const { revalidatePath } = await import('next/cache');
+            revalidatePath('/games');
+          }
+
           return (
             <div
               key={game.id}
@@ -82,7 +84,7 @@ export default async function GamesPage() {
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-1 flex-wrap">
                     <span className="text-gray-500 text-xs font-bold uppercase tracking-wider">
-                      Game {game.game_number} of 20
+                      Game {game.game_number}
                     </span>
                     <span className={`text-xs font-bold px-2.5 py-0.5 rounded-full border ${statusCfg.className}`}>
                       {statusCfg.label}
@@ -104,7 +106,7 @@ export default async function GamesPage() {
                 </div>
 
                 {/* Actions */}
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2 items-center">
                   {game.status === 'upcoming' && (
                     <>
                       <Link
@@ -145,6 +147,22 @@ export default async function GamesPage() {
                       </Link>
                     </>
                   )}
+                  
+                  {/* Delete Game */}
+                  <form action={deleteGame}>
+                    <button
+                      type="submit"
+                      className="text-gray-500 hover:text-red-400 p-2 rounded-lg hover:bg-gray-800 transition-colors ml-2"
+                      title="Delete Game"
+                      onClick={(e) => {
+                        if (!confirm('Are you sure you want to delete this game? This action cannot be undone.')) {
+                          e.preventDefault();
+                        }
+                      }}
+                    >
+                      🗑
+                    </button>
+                  </form>
                 </div>
               </div>
             </div>

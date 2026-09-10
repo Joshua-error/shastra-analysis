@@ -26,16 +26,9 @@ export default async function NewGamePage() {
     const existingGames = (games as Pick<Game, 'game_number'>[] | null) ?? [];
     gameCount = existingGames.length;
 
-    if (gameCount >= 20) {
-      redirect('/games');
-    }
-
-    const usedNumbers = new Set(existingGames.map((g) => g.game_number));
-    for (let i = 1; i <= 20; i++) {
-      if (!usedNumbers.has(i)) {
-        nextGameNumber = i;
-        break;
-      }
+    if (gameCount > 0) {
+      // Find the highest game number and add 1
+      nextGameNumber = Math.max(...existingGames.map((g) => g.game_number)) + 1;
     }
   }
 
@@ -46,7 +39,7 @@ export default async function NewGamePage() {
     <div className="p-6 max-w-4xl mx-auto pb-24 md:pb-6">
       <div className="mb-8">
         <h1 className="text-3xl font-black text-white">New Game</h1>
-        <p className="text-gray-400 mt-1">Game {nextGameNumber} of 20</p>
+        <p className="text-gray-400 mt-1">Game {nextGameNumber}</p>
       </div>
       <GameForm
         tournamentId={tournamentId}

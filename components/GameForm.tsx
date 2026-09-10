@@ -174,11 +174,6 @@ export default function GameForm({ tournamentId, currentGameCount, nextGameNumbe
     if (errA) { setRosterErrorA(errA); return; }
     if (errB) { setRosterErrorB(errB); return; }
 
-    if (!editGame && currentGameCount >= 20) {
-      setError('Maximum of 20 games reached for this tournament.');
-      return;
-    }
-
     setLoading(true);
     try {
       // Ensure background operator session exists to satisfy Supabase RLS policies
