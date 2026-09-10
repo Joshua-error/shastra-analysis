@@ -5,7 +5,7 @@ import Link from 'next/link';
 import type { GameWithPlayers, StatKey } from '@/lib/types';
 import { useLiveGame } from '@/lib/hooks/useLiveGame';
 import { useGameTimer } from '@/lib/hooks/useGameTimer';
-import { PlayerRow, PlayerCard } from '@/components/PlayerControls';
+import { PlayerCard } from '@/components/PlayerControls';
 import FinishGameButton from '@/components/FinishGameButton';
 
 const STAT_HEADERS: Array<{ key: StatKey | 'pts'; label: string }> = [
@@ -159,63 +159,49 @@ export default function LiveGameClient({ initialGame }: Props) {
         </div>
       )}
 
-      {/* ── Desktop: side by side ── */}
+    {/* ── Desktop: side by side ── */}
       {isDesktop ? (
         <div className="flex">
           {/* Team A panel */}
           <div className="flex-1 min-w-0 border-r border-gray-800">
-            <div className="px-4 py-3 bg-orange-500/10 border-b border-gray-800 flex items-center justify-between">
-              <span className="font-bold text-orange-400 text-sm">{game.team_a_name}</span>
-              <span className="text-orange-400 font-black text-xl">{teamAScore}</span>
+            <div className="px-6 py-4 bg-orange-500/10 border-b border-gray-800 flex items-center justify-between">
+              <span className="font-bold text-orange-400 text-lg">{game.team_a_name}</span>
+              <span className="text-orange-400 font-black text-2xl">{teamAScore}</span>
             </div>
-            {/* Stat column headers */}
-            <div className="flex items-center gap-2 px-4 py-2 border-b border-gray-800 text-gray-500 text-xs font-bold">
-              <div className="w-36 flex-shrink-0">PLAYER</div>
-              <div className="flex gap-1 flex-shrink-0">
-                {['+1','+2','+3','PTS'].map(h => <div key={h} className="w-12 text-center">{h}</div>)}
-              </div>
-              {STAT_HEADERS.slice(1).map(h => (
-                <div key={h.key} className="flex-shrink-0 w-24 text-center">{h.label}</div>
+            
+            <div className="p-4 grid grid-cols-1 2xl:grid-cols-2 gap-4">
+              {game.players_a.map((player) => (
+                <PlayerCard
+                  key={player.id}
+                  player={player}
+                  onStat={recordStat}
+                />
               ))}
+              {game.players_a.length === 0 && (
+                <p className="text-gray-500 text-sm p-4 col-span-full">No players on this team.</p>
+              )}
             </div>
-            {game.players_a.map((player) => (
-              <PlayerRow
-                key={player.id}
-                player={player}
-                onStat={recordStat}
-              />
-            ))}
-            {game.players_a.length === 0 && (
-              <p className="text-gray-500 text-sm p-4">No players on this team.</p>
-            )}
           </div>
 
           {/* Team B panel */}
           <div className="flex-1 min-w-0">
-            <div className="px-4 py-3 bg-blue-500/10 border-b border-gray-800 flex items-center justify-between">
-              <span className="font-bold text-blue-400 text-sm">{game.team_b_name}</span>
-              <span className="text-blue-400 font-black text-xl">{teamBScore}</span>
+            <div className="px-6 py-4 bg-blue-500/10 border-b border-gray-800 flex items-center justify-between">
+              <span className="font-bold text-blue-400 text-lg">{game.team_b_name}</span>
+              <span className="text-blue-400 font-black text-2xl">{teamBScore}</span>
             </div>
-            {/* Stat column headers */}
-            <div className="flex items-center gap-2 px-4 py-2 border-b border-gray-800 text-gray-500 text-xs font-bold">
-              <div className="w-36 flex-shrink-0">PLAYER</div>
-              <div className="flex gap-1 flex-shrink-0">
-                {['+1','+2','+3','PTS'].map(h => <div key={h} className="w-12 text-center">{h}</div>)}
-              </div>
-              {STAT_HEADERS.slice(1).map(h => (
-                <div key={h.key} className="flex-shrink-0 w-24 text-center">{h.label}</div>
+            
+            <div className="p-4 grid grid-cols-1 2xl:grid-cols-2 gap-4">
+              {game.players_b.map((player) => (
+                <PlayerCard
+                  key={player.id}
+                  player={player}
+                  onStat={recordStat}
+                />
               ))}
+              {game.players_b.length === 0 && (
+                <p className="text-gray-500 text-sm p-4 col-span-full">No players on this team.</p>
+              )}
             </div>
-            {game.players_b.map((player) => (
-              <PlayerRow
-                key={player.id}
-                player={player}
-                onStat={recordStat}
-              />
-            ))}
-            {game.players_b.length === 0 && (
-              <p className="text-gray-500 text-sm p-4">No players on this team.</p>
-            )}
           </div>
         </div>
       ) : (
